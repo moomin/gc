@@ -1,0 +1,6 @@
+<?= $header ?>
+<?= $userBar ?>
+
+<?= $cacheList ?>
+
+<?= $footer ?>
