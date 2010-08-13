@@ -16,9 +16,10 @@ require_once 'Html.php';
 
 try
 {
+    //initialize site
     $site = Site::getInstance();
-    $site->title = 'gc.deathbed.org.ua';
-
+    $site->title = $cfg['title'];
+    $site->debug = $cfg['debug'];
     $site->setUrlPrefix($cfg['url_prefix']);
 
     $site->addHeader('meta', false, array('http-equiv' => 'Content-Type', 'content' => 'text/html; charset=utf-8'));
@@ -26,11 +27,21 @@ try
     $site->user = new User;
     $site->html = new Html;
 
-    $router = new router;
+    unset($cfg);
+
+    //initialize and run router
+    $router = new Router;
+
     $router->init();
     $router->run();
 }
 catch(Exception $e)
 {
-    echo "Something went wrong, sorry. Try again later.";
+    header('Content-Type: text/plain');
+
+    echo "Something went wrong, sorry. Try again later.\n";
+    if ($site->debug)
+    {
+        echo 'Exception caught: '.$e->getMessage();
+    }
 }

@@ -10,6 +10,7 @@ class Site
     private $urlMode = self::URL_MODE_SIMPLE;
     private $urlPrefix = '/';
     public $title;
+    public $debug;
     public $text;
     public $user;
     public $html;

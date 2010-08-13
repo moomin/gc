@@ -1,7 +1,6 @@
 <?php
 
 require_once 'View.php';
-require_once 'Site.php';
 
 class HeaderView extends View
 {
@@ -9,10 +8,6 @@ class HeaderView extends View
     {
         parent::__construct();
 
-        $site = Site::getInstance();
-
-        $this->html = $site->html;
-        $this->title = $site->title;
-        $this->headers = $site->getHeaders();
+        $this->requiredVars['Site'] = self::MANDATORY_VAR;
     }
 }
