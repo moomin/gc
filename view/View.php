@@ -31,12 +31,17 @@ class View
         }
     }
 
-    function __set($name, $value)
+    public function getRequiredVars()
+    {
+        return array_keys($this->requiredVars);
+    }
+
+    public function __set($name, $value)
     {
         $this->set($name, $value);
     }
 
-    function set($name, $value = '')
+    public function set($name, $value = '')
     {
         //if object is passed as name then use it's class name as var name and
         //assign the object to $value, and then go further with standard flow
@@ -46,9 +51,10 @@ class View
             $name = get_class($name);
         }
 
-        //don't add ourself to avoid endless recursion during fetch
+        //don't add myself to avoid endless recursion during fetch
         if ($value === $this)
         {
+            var_dump($name); echo "<br>\n";
             return false;
         }
 
@@ -68,10 +74,93 @@ class View
         }
     }
 
+    protected function parseChildView()
+    {
+
+
+
+    }
+
+    protected function fetchChildView($viewToFetch, $history = array())
+    {
+        $viewsAvailable = array();
+
+        //replace View objects with their fetching results
+        foreach (array_keys($this->vars) as $name)
+        {
+            //if $value is an instance of View class then replace it with fetch result
+            if (is_object($this->vars[$name]) && $this->vars[$name] instanceof View)
+            {
+                $viewsAvailable[] = $name;
+            }
+        }
+
+        //this view is already fetched
+        if (!in_array($viewToFetch, $viewsAvailable) && isset($this->vars[$viewToFetch]))
+        {
+            return true;
+        }
+        //we are in recursive dependency here
+        else if (in_array($viewToFetch, $history))
+        {
+            throw new Exception(get_class($this)
+                                .'('. $this->file
+                                .'): recursive dependency in views; dependency tree:'
+                                .implode('->', $history)
+                                .'->'
+                                .$viewToFetch);
+        }
+        //to many recursive calls, something might be wrong
+        //@todo: define a constant for this number
+        elseif (count($history) > 200)
+        {
+            throw new Exception(get_class($this)
+                                .'('. $this->file
+                                .'): Wow! It\'s over 9000(actually '
+                                .count($history)
+                                .') recursive calls during Views dependency resolving; dependency tree:'
+                                .implode('->', $history)
+                                .'->'
+                                .$viewToFetch);
+        }
+
+        $history[] = $viewToFetch;
+
+        $view = $this->vars[$viewToFetch];
+
+        $varsRequiredByView = $view->getRequiredVars();
+
+        //pass all our variables to child View
+        //@todo probably it is better to request required vars and assign only them
+        //instead of trying to add every object
+        foreach (array_keys($this->vars) as $varName)
+        {
+            $currentVar = $this->vars[$varName];
+
+            //don't pass itself
+            if ($varName == $viewToFetch)
+            {
+                continue;
+            }
+            else if ($currentVar instanceof View)
+            {
+                $this->fetchChildView($varName, $history);
+            }
+            else
+            {
+                $view->set($varName, $currentVar);
+            }
+        }
+
+        $view = $view->fetch();
+
+        return true;
+    }
+
     /**
      * Opens, parses, and returns the template file.
      */
-    function fetch()
+    public function fetch()
     {
         //throw an exception in case any mandatory variable is missing
         foreach ($this->requiredVars as $name => $mode)
@@ -87,27 +176,12 @@ class View
             }
         }
 
-        //replace View objects with their fetching results
-        foreach ($this->vars as $name => &$value)
+        foreach (array_keys($this->vars) as $name)
         {
             //if $value is an instance of View class then replace it with fetch result
-            if (is_object($value) && $value instanceof View)
+            if (is_object($this->vars[$name]) && $this->vars[$name] instanceof View)
             {
-                //pass all our variables to child View
-                //@todo probably it is better to request required vars and assign only them
-                //instead of trying to add every object
-                foreach (array_keys($this->vars) as $varName)
-                {
-                    //don't pass itself
-                    if ($varName == get_class($value))
-                    {
-                        continue;
-                    }
-
-                    $value->set($varName, $this->vars[$varName]);
-                }
-
-                $value = $value->fetch();
+                $this->fetchChildView($name);
             }
         }
 
@@ -127,7 +201,7 @@ class View
         return $contents;              // Return the contents
     }
 
-    function display()
+    public function display()
     {
         echo $this->fetch();
     }

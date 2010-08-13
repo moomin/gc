@@ -15,7 +15,6 @@ class Index extends ControllerBase
     {
         $view = new IndexView;
 
-        $site = Site::getInstance();
         $view->set(Site::getInstance());
         $view->set(new HeaderView());
         $view->set(new UserBarView());
