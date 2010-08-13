@@ -1,0 +1,6 @@
+<?= $HeaderView ?>
+<?= $UserBarView ?>
+
+<?= $CacheListView ?>
+
+<?= $FooterView ?>
