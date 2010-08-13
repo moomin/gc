@@ -1,7 +1,7 @@
 <div id="userBar">
 <?php
-    if ($Site->user->isSignedIn())
-    {
+   if ($Site->user->isSignedIn()) 
+   {
 ?>
 <?= $Site->text->hello.', '.$Site->user->name ?>
 &nbsp;

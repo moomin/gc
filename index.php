@@ -27,6 +27,7 @@ try
     $site->user = new User;
     $site->html = new Html;
 
+    define('MAX_VIEW_DEPTH', isset($cfg['max_view_depth']) ? $cfg['max_view_depth'] : 100);
     unset($cfg);
 
     //initialize and run router

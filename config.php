@@ -3,6 +3,9 @@
 //configuration variables
 $cfg = array();
 
+//debug mode
+$cfg['debug'] = true;
+
 //path where all code files reside
 $cfg['codedir'] = dirname(__FILE__);
 
@@ -12,5 +15,5 @@ $cfg['url_prefix'] = '/~dusoft/gc/';
 //site title that will appear in <title> tag
 $cfg['title'] = 'gc.deathbed.org.ua';
 
-//debug mode
-$cfg['debug'] = true;
+//maximum depth of view dependencies
+$cfh['max_view_depth'] = 100;

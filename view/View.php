@@ -54,7 +54,6 @@ class View
         //don't add myself to avoid endless recursion during fetch
         if ($value === $this)
         {
-            var_dump($name); echo "<br>\n";
             return false;
         }
 
@@ -72,13 +71,6 @@ class View
         {
             $this->vars[$name] = $value;
         }
-    }
-
-    protected function parseChildView()
-    {
-
-
-
     }
 
     protected function fetchChildView($viewToFetch, $history = array())
@@ -112,7 +104,7 @@ class View
         }
         //to many recursive calls, something might be wrong
         //@todo: define a constant for this number
-        elseif (count($history) > 200)
+        elseif (count($history) > MAX_VIEW_DEPTH)
         {
             throw new Exception(get_class($this)
                                 .'('. $this->file
@@ -130,12 +122,12 @@ class View
 
         $varsRequiredByView = $view->getRequiredVars();
 
-        //pass all our variables to child View
+        //assign variables required by child
         //@todo probably it is better to request required vars and assign only them
         //instead of trying to add every object
-        foreach (array_keys($this->vars) as $varName)
+        foreach ($varsRequiredByView as $varName)
         {
-            $currentVar = $this->vars[$varName];
+            $currentVar = isset($this->vars[$varName]) ? $this->vars[$varName] : false;
 
             //don't pass itself
             if ($varName == $viewToFetch)
@@ -146,13 +138,14 @@ class View
             {
                 $this->fetchChildView($varName, $history);
             }
-            else
+            else if ($currentVar === false)
             {
-                $view->set($varName, $currentVar);
+                continue;
             }
+            $view->set($varName, $currentVar);
         }
 
-        $view = $view->fetch();
+        $this->vars[$viewToFetch] = $view->fetch();
 
         return true;
     }
@@ -175,13 +168,13 @@ class View
                                     .' is not set');
             }
         }
-
-        foreach (array_keys($this->vars) as $name)
+ 
+        foreach (array_keys($this->vars) as $varName)
         {
-            //if $value is an instance of View class then replace it with fetch result
-            if (is_object($this->vars[$name]) && $this->vars[$name] instanceof View)
+            //if variable is an instance of View class then replace it with fetch result
+            if ($this->vars[$varName] instanceof View)
             {
-                $this->fetchChildView($name);
+                $this->fetchChildView($varName);
             }
         }
 
