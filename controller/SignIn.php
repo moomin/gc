@@ -52,8 +52,7 @@ class SignIn extends ControllerBase
                 }
                 elseif ($openid->validate())
                 {
-                    $user->name = $openid->identity;
-                    $user->setAuthResult(User::AUTH_RES_OK);
+                    $user->signIn($openid->identity);
 
                     //destroy any current session
                     if (session_id())
