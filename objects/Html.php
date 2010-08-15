@@ -40,6 +40,18 @@ class Html
             ;
     }
 
+    public function getTagInput($value, $attributes)
+    {
+        return
+            '<input'
+            .($attributes ? $this->getAttributes($attributes) : '')
+            .'value="'.$value.'"'
+            .($this->mode == 'xhtml' ? '/' : '')
+            .'>'
+            ;
+        
+    }
+
     //TODO: add htmlspecialchars where applicable
     protected function getAttributes($attributes = array())
     {

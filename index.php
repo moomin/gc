@@ -16,19 +16,20 @@ require_once 'Html.php';
 
 try
 {
+    define('MAX_VIEW_DEPTH', isset($cfg['max_view_depth']) ? $cfg['max_view_depth'] : 100);
+
     //initialize site
     $site = Site::getInstance();
-    $site->title = $cfg['title'];
-    $site->debug = $cfg['debug'];
-    $site->setUrlPrefix($cfg['url_prefix']);
+    $site->init($cfg);
+    unset($cfg);
 
     $site->addHeader('meta', false, array('http-equiv' => 'Content-Type', 'content' => 'text/html; charset=utf-8'));
+
 
     $site->user = new User;
     $site->html = new Html;
 
-    define('MAX_VIEW_DEPTH', isset($cfg['max_view_depth']) ? $cfg['max_view_depth'] : 100);
-    unset($cfg);
+    $site->user->signIn('Valera');
 
     //initialize and run router
     $router = new Router;

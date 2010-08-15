@@ -7,8 +7,8 @@ class Router
 
     public function __construct()
     {
-        $this->controller = ucfirst($this->getRequestParam('module', 'index'));
-        $this->method = $this->getRequestParam('method', 'index');
+        $this->controller = ucfirst($this->getRequestParam('module', 'siteController'));
+        $this->method = $this->getRequestParam('method', 'defaultAction');
 
         unset($_GET['module'], $_GET['method']);
     }
@@ -36,9 +36,9 @@ class Router
 
             if (!$c->doAction($this->method))
             {
-                include_once 'Index.php';
-                $index = new Index;
-                $index->index();
+                include_once 'SiteController.php';
+                $siteController = new SiteController;
+                $siteController->defaultAction();
             }
         }
         else

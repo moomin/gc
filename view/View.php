@@ -197,5 +197,6 @@ class View
     public function display()
     {
         echo $this->fetch();
+        return true;
     }
 }

@@ -5,23 +5,26 @@ class User
     const AUTH_RES_NONE = 1;
     const AUTH_RES_OK = 2;
     const AUTH_RES_FAIL = 3;
-    const AUTH_RES_CANCEL = 43;
+    const AUTH_RES_CANCEL = 4;
 
     public $name = '';
     public $authResult = self::AUTH_RES_NONE;
+    public $languageId = 1;
+    public $timezoneId = 1;
 
     public function __construct()
     {
-        if (isset($_SESSION['user']))
-        {
-            $this->name = $_SESSION['user'];
-            $this->authResult = self::AUTH_RES_OK;
-        }
     }
 
-    public function setAuthResult($authResult)
+    public function signIn($name)
     {
-        $this->authResult = $authResult;
+        $this->name = $name;
+        $this->authResult = self::AUTH_RES_OK;
+    }
+
+    public function setAuthResult($result)
+    {
+        $this->authResult = $result;
     }
 
     public function isSignedIn()

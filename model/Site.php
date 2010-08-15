@@ -27,6 +27,14 @@ class Site
     {
     }
 
+    public function init($config)
+    {
+        $this->title = $config['title'];
+        $this->debug = $config['debug'];
+        $this->setUrlPrefix($config['url_prefix']);
+        return true;
+    }
+
     public function setUrlMode($mode)
     {
         if (in_array($mode, array(self::URL_MODE_SIMPLE,
@@ -70,15 +78,27 @@ class Site
 
     public function getTranslations($module = false, $method = false)
     {
-        $text = new GetText;
-        $text->hello = 'Hello';
-        $text->openid = 'OpenID';
-        $text->signin = 'Sign In';
-        $text->signout = 'Sign Out';
-        $text->signinfailed = 'Failed to authorize you';
-        $text->signincancel = 'You canceled authorization';
+        $t = new GetText;
+        $t->hello = 'Hello';
+        $t->openid = 'OpenID';
+        $t->signin = 'Sign In';
+        $t->signout = 'Sign Out';
+        $t->signinfailed = 'Failed to authorize you';
+        $t->signincancel = 'You canceled authorization';
 
-        $this->text = $text;
+        $t->addCache = 'Add cache';
+        $t->myCaches = 'My caches';
+        $t->Preferences = 'Preferences';
+
+        $t->cacheTitle = 'Title';
+        $t->latitude = 'Latitude';
+        $t->longtitude = 'Longtitude';
+        $t->cacheBirthDate = 'The date cache was set on';
+        $t->cacheDescription = 'Contents';
+        $t->locationDescription = 'Location description';
+        $t->submitCache = 'Submit';
+
+        $this->text = $t;
     }
 
     public function getUrl($module, $method = '', $arguments = array(), $full = false)
