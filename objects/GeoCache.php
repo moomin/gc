@@ -17,8 +17,8 @@ class GeoCache
     public $latitude = false;
     public $longtitude = false;
 
+    public $birthTimestamp = false;
     public $submitTimestamp = false;
-    public $timestamp = false;
     public $creator = false;
     public $status = self::STATUS_NEW;
 
