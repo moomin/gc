@@ -16,4 +16,11 @@ $cfg['url_prefix'] = '/~dusoft/gc/';
 $cfg['title'] = 'gc.deathbed.org.ua';
 
 //maximum depth of view dependencies
-$cfh['max_view_depth'] = 100;
+$cfg['max_view_depth'] = 100;
+
+//storage information
+$cfg['storage_type'] = 'mysql';
+$cfg['storage']['host'] = 'localhost';
+$cfg['storage']['db']   = 'gc';
+$cfg['storage']['user'] = 'gc';
+$cfg['storage']['pass'] = 'qwerty';
