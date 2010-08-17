@@ -5,7 +5,7 @@ require_once 'CacheView.php';
 require_once 'CacheListView.php';
 require_once 'GeoCache.php';
 
-class Cache extends SiteController
+class CacheController extends SiteController
 {
     public function defaultAction()
     {

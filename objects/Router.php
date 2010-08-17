@@ -7,7 +7,7 @@ class Router
 
     public function __construct()
     {
-        $this->controller = ucfirst($this->getRequestParam('module', 'siteController'));
+        $this->controller = ucfirst($this->getRequestParam('module', 'site')) . 'Controller';
         $this->method = $this->getRequestParam('method', 'defaultAction');
 
         unset($_GET['module'], $_GET['method']);
