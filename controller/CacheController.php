@@ -24,8 +24,19 @@ class CacheController extends SiteController
         return $this->displayAll();
     }
 
-    public function addSubmit()
+    public function submit()
     {
+        $cache = new GeoCache;
+        $this->fillObject($cache,
+                          array('id',
+                                'title',
+                                'latitude',
+                                'longtitude',
+                                'locationDescription',
+                                'cacheDescription'));
+                                        
+        Site::getInstance()->storage->saveCache($cache);
+
         return false;
     }
 

@@ -6,7 +6,7 @@
     if ($edit)
     {
         $edit = true;
-        echo '<form method="post" name="cache" action="'.$Site->getUrl('Cache', 'addSubmit').'">'."\n";
+        echo '<form method="post" name="cache" action="'.$Site->getUrl('Cache', 'submit').'">'."\n";
         echo $html->getTag('label', $txt->cacheTitle, array('for' => 'cacheTitle'));
         echo $html->getTag('input', '', array('type' => 'text', 'name' => 'title', 'id' => 'cacheTitle'))."<br>\n";
 
