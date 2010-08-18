@@ -1,6 +1,7 @@
 <?php
 
 require_once 'GeoCache.php';
+require_once 'StorageBackend.php';
 
 class Storage
 {
@@ -9,6 +10,11 @@ class Storage
     public function __construct(StorageBackend $backend)
     {
         $this->backend = $backend;
+    }
+
+    public function getError()
+    {
+        return $this->backend->getError();
     }
 
     public function getObjectFields($object, $fields)
@@ -27,32 +33,36 @@ class Storage
 
     public function saveCache(GeoCache $cache)
     {
-        $data = array();
+        $data = array('id' => 'int',
+                        'title' => 'string',
+                        'birthTimestamp' => 'int',
+                        'submitTimestamp' => 'int',
+                        'creator' => 'string',
+                        'status' => 'int',
+                        'cacheDescription' => 'string',
+                        'locationDescription' => 'string');
 
-        $fields = array('id',
-                        'title',
-                        'birthTimestamp',
-                        'submitTimestamp',
-                        'creator',
-                        'status',
-                        'cacheDescription',
-                        'locationDescription');
+        //        $fields = array_merge($data, $this->getObjectFields($cache, $data));
+        $fields = new StorageBackendFieldSet($cache, $data);
 
-        $data = array_merge($data, $this->getObjectFields($cache, $fields));
+        $fields->setField('point', 'WKT', 'POINT('.$cache->latitude.' '.$cache->longtitude.')');
 
-        $data['point'] = 'POINT('.$cache->latitude.', '.$cache->longtitude.')';
-
-        $id = $data['id'];
-        unset($data['id']);
-
-        if (!$id)
+        if (!$fields->getField('id'))
         {
-            return $this->backend->insert('geocache', $data);
+            $result = $this->backend->insert('geocache', $fields);
         }
         else
         {
-            return $this->backend->update('geocache', $data, array('id' => $id));
+            $keyFields = new StorageBackendFieldSet($cache, array('id' => 'int'));
+            $result = $this->backend->update('geocache', $data, $keyFields);
         }
+
+        if (!$result)
+        {
+            throw new Exception($this->getError());
+        }
+
+        return $result;
     }
 
     public function getCache($id)
