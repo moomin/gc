@@ -66,5 +66,24 @@ class SiteController extends ControllerBase
         new View('FooterView.tpl', null, true);
         return true;
     }
+
+    public function fillObject($object, $properties, $from = 'post')
+    {
+        if (!is_array($from))
+        {
+            $from = $this->$from;
+        }
+
+        foreach ($properties as $name)
+        {
+            if (isset($from[$name]))
+            {
+                $object->$name = $from[$name];
+            }
+        }
+
+        return true;
+    }
+
 }
 
