@@ -42,3 +42,21 @@ CHARACTER SET = 'utf8'
 COMMENT = 'Time zones';
 
 INSERT INTO `timeZone` VALUES(NULL, 'GMT (UTC)', 0);
+
+-- translations table
+
+DROP TABLE IF EXISTS `translation`;
+
+CREATE TABLE IF NOT EXISTS `translation` (
+  `controller` VARCHAR(100) DEFAULT NULL,
+  `method` VARCHAR(100) DEFAULT NULL,
+  `languageId` TINYINT UNSIGNED DEFAULT 1,
+  `label` VARCHAR(255) NOT NULL,
+  `text` TEXT,
+  CONSTRAINT PRIMARY KEY (`languageId`, `label`),
+  INDEX (`controller`, `method`, `languageId`)
+)
+ENGINE = MyISAM
+AUTO_INCREMENT = 1
+CHARACTER SET = 'utf8'
+COMMENT = 'text in different languages';
