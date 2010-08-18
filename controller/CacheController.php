@@ -26,8 +26,10 @@ class CacheController extends SiteController
 
     public function submit()
     {
+        $site = Site::getInstance();
+
         $cache = new GeoCache;
-        $this->fillObject($cache,
+        $this->updateObject($cache,
                           array('id',
                                 'title',
                                 'latitude',
@@ -35,7 +37,41 @@ class CacheController extends SiteController
                                 'locationDescription',
                                 'cacheDescription'));
                                         
-        Site::getInstance()->storage->saveCache($cache);
+        $cache->creator = $site->user->name;
+
+        $decimalMinutes = (float)($this->post['latitudeMin'].'.'.$this->post['latitudeDec']);
+        $decimalDegree = (float)$this->post['latitudeDegree'] + ($decimalMinutes/60);
+        $cache->latitude = (float)($this->post['latitudeSign'].$decimalDegree);
+
+        $decimalMinutes = (float)($this->post['longtitudeMin'].'.'.$this->post['longtitudeDec']);
+        $decimalDegree = (float)$this->post['longtitudeDegree'] + ($decimalMinutes/60);
+        $cache->longtitude = (float)($this->post['longtitudeSign'].$decimalDegree);
+
+        if ($cache->id)
+        {
+            $existingCache = $site->storage->getCache($cache->id);
+        }
+        else
+        {
+            $existingCache = false;
+        }
+
+        //if cache exists but cannot be updated
+        if ($existingCache &&
+            (
+             ($existingCache->creator != $cache->creator) ||
+             ($existingCache->submitTimestamp+(60*60*24*3) < gmmktime())
+            )
+        {
+            return false;
+        }
+        else if ($existingCache)
+        {
+            //force title from existing cache
+            $cache->title = $existingCache->title;
+        }
+
+        $site->storage->saveCache($cache);
 
         return false;
     }

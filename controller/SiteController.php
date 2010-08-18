@@ -67,7 +67,7 @@ class SiteController extends ControllerBase
         return true;
     }
 
-    public function fillObject($object, $properties, $from = 'post')
+    public function updateObject($object, $properties, $from = 'post')
     {
         if (!is_array($from))
         {
