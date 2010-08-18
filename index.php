@@ -10,9 +10,6 @@ set_include_path($cfg['codedir'] . '/objects:' .
 
 require_once 'Router.php';
 require_once 'Site.php';
-require_once 'GetText.php';
-require_once 'User.php';
-require_once 'Html.php';
 
 try
 {
@@ -24,10 +21,6 @@ try
     unset($cfg);
 
     $site->addHeader('meta', false, array('http-equiv' => 'Content-Type', 'content' => 'text/html; charset=utf-8'));
-
-
-    $site->user = new User;
-    $site->html = new Html;
 
     $site->user->signIn('Valera');
 

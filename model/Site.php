@@ -1,5 +1,11 @@
 <?php
 
+require_once 'GetText.php';
+require_once 'User.php';
+require_once 'Html.php';
+require_once 'StorageBackendFactory.php';
+require_once 'Storage.php';
+
 class Site
 {
     private static $instance = null;
@@ -10,6 +16,7 @@ class Site
     private $urlMode = self::URL_MODE_SIMPLE;
     private $urlPrefix = '/';
     public $title;
+    public $storage;
     public $debug;
     public $text;
     public $user;
@@ -29,6 +36,14 @@ class Site
 
     public function init($config)
     {
+        $this->user = new User;
+        $this->html = new Html;
+
+        $storageBackend = StorageBackendFactory::getStorageBackend($config['storage_type'],
+                                                                   $config['storage']);
+
+        $this->storage = new Storage($storageBackend);
+
         $this->title = $config['title'];
         $this->debug = $config['debug'];
         $this->setUrlPrefix($config['url_prefix']);
