@@ -1,0 +1,21 @@
+body
+{
+  font-size: .9em;
+  font-family: sans-serif;
+}
+
+#geocache
+{
+  width: 50%;
+  text-align: left;
+}
+
+#geocache label
+{
+
+}
+
+#geocache span
+{
+  width: 100%;
+}
