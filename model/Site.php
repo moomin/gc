@@ -39,6 +39,12 @@ class Site
         $this->user = new User;
         $this->html = new Html;
 
+        if (isset($_SESSION['user']))
+        {
+            $this->user->name = $_SESSION['user'];
+            $this->user->setAuthResult(User::AUTH_RES_OK);
+        }
+
         $storageBackend = StorageBackendFactory::getStorageBackend($config['storage_type'],
                                                                    $config['storage']);
 
@@ -125,7 +131,7 @@ class Site
         $url = $full ? (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] : '';
         $url .= $this->urlPrefix;
 
-        if ($module == 'index' && $method == '')
+        if ($module == 'site' && $method == '')
         {
             return $url;
         }
