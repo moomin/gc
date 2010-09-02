@@ -1,12 +1,26 @@
 <?php
 
-require_once 'Controller.php';
+require_once 'Site.php';
 require_once 'HeaderView.php';
 require_once 'UserBarView.php';
 
-class SiteController extends ControllerBase
+class SiteController
 {
+    protected $get;
+    protected $post;
+    protected $args;
+
+    protected $site;
     protected $views = array();
+
+    public function __construct()
+    {
+        $this->get = $_GET;
+        $this->post = isset($_POST) ? $_POST : array();
+        $this->args = array_merge($this->get, $this->post);
+
+        $this->site = Site::getInstance();
+    }
 
     public function addView($view)
     {
@@ -32,15 +46,22 @@ class SiteController extends ControllerBase
             $this->displayBottom());
     }
 
+    public function displayHead()
+    {
+        $header = new HeaderView();
+        $header->set($this->site);
+        $header->display();
+
+        return true;
+    }
+
     public function displayTop()
     {
-        $site = Site::getInstance();
-        
         $header = new HeaderView();
-        $header->set($site);
+        $header->set($this->site);
 
         $userBar = new UserBarView();
-        $userBar->set($site);
+        $userBar->set($this->site);
 
         $header->display();
         $userBar->display();
