@@ -30,26 +30,33 @@ class Html
             ;
     }
 
-    public function getTagMeta($value, $attributes)
+    public function getNoValueTag($name, $attributes)
     {
         return
-            '<meta'.
-            ($attributes ? $this->getAttributes($attributes) : '').
+            '<'
+            .$name
+            .($attributes ? $this->getAttributes($attributes) : '').
             ($this->mode == 'xhtml' ? '/' : '').
             '>'
             ;
+
+    }
+
+    public function getTagMeta($value, $attributes)
+    {
+        return $this->getNoValueTag('meta', $attributes);
+    }
+
+    public function getTagLink($value, $attributes)
+    {
+        return $this->getNoValueTag('link', $attributes);
     }
 
     public function getTagInput($value, $attributes)
     {
-        return
-            '<input'
-            .($attributes ? $this->getAttributes($attributes) : '')
-            .'value="'.$value.'"'
-            .($this->mode == 'xhtml' ? '/' : '')
-            .'>'
-            ;
-        
+        $attributes['value'] = $value;
+
+        return $this->getNoValueTag('input', $attributes);
     }
 
     //TODO: add htmlspecialchars where applicable

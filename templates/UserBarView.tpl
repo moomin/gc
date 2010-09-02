@@ -5,7 +5,6 @@
 ?>
 <?= $Site->text->hello.', '.$Site->user->name ?>
 &nbsp;
-
 <?= $Site->html->getTag('a', $Site->text->addCache, array('href' => $Site->getUrl('Cache', 'add'))) ?>
 &nbsp;
 <?= $Site->html->getTag('a', $Site->text->myCaches, array('href' => $Site->getUrl('Cache', 'showList', array('filter'=>'my')))) ?>
@@ -42,4 +41,5 @@
 <?php
      }
 ?>
+
 </div>

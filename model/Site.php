@@ -108,10 +108,14 @@ class Site
         $t->cacheTitle = 'Title';
         $t->latitude = 'Latitude';
         $t->longtitude = 'Longtitude';
-        $t->cacheBirthDate = 'The date cache was set on';
+        $t->cacheBirthDate = 'Date set';
         $t->cacheDescription = 'Contents';
         $t->locationDescription = 'Location description';
         $t->submitCache = 'Submit';
+
+        $t->redirectMessage = 'Now you should be automatically redirected to %s in %d seconds';
+        $t->forceRedirectMessage = "To get there immidiately - click ";
+        $t->clickHere = 'here';
 
         $this->text = $t;
     }

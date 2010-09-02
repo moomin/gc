@@ -14,4 +14,9 @@ class GetText
         return isset($this->strings[$name]) ? $this->strings[$name] : '{'.$name.'}';
     }
 
+    public function get($name, $args)
+    {
+        return vsprintf($this->$name, $args);
+    }
+
 }

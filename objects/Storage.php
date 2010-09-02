@@ -76,4 +76,21 @@ class Storage
         return false;
     }
 
+    public function getCaches(StorageBackendFieldSet $conditions = null, $limit = 10, $startFrom = false)
+    {
+        $data = array('id' => 'int',
+                        'title' => 'string',
+                        'birthTimestamp' => 'int',
+                        'submitTimestamp' => 'int',
+                        'creator' => 'string',
+                        'status' => 'int',
+                        'cacheDescription' => 'string',
+                        'locationDescription' => 'string');
+
+        $fieldsToReturn = new StorageBackendFieldSet(new GeoCache,
+                                                     $data);
+
+        return $this->backend->find('geocache', $fieldsToReturn, null, 'submitTimestamp', 'DESC', $limit, $startFrom);
+    }
+
 }

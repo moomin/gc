@@ -88,7 +88,74 @@ class StorageBackendMysql extends StorageBackend
                          $limitRows = false,
                          $returnFrom = false)
     {
+        $q = 'SELECT ';
 
+        $selectFields = array();
+
+        $fields = $searchFields->getFields();
+
+        while(list($name, $field) = each($fields))
+        {
+            $selectFields[] = '`'.$name.'`';
+        }
+
+        $q .= implode(',', $selectFields);
+
+        $q .= ' FROM `'.$objectName.'`';
+
+        if ($objectFields)
+        {
+            $q .= ' WHERE';
+
+            if (!get_magic_quotes_gpc())
+            {
+                $objectFields->applyCallbackToStrings(array($this->db, 'real_escape_string'));
+            }
+
+            $fields = $objectFields->getFields();
+
+            while(list($name, $field) = each($fields))
+            {
+                //values which don't need quotes around it
+                if (in_array($field['type'], array('int', 'float')))
+                {
+                    $value = $field['value'];
+                }
+                //values which require quoutes around
+                else if ($field['type'] == 'string')
+                {
+                    $value = "'".$field['value']."'";
+                }
+
+                $whereFields[] = '`'.$name.'` = ' . $value;
+            }
+
+            $q .= implode (' AND ', $whereFields);
+        }
+
+        if ($orderBy)
+        {
+            $q .= ' ORDER BY `' . $orderBy . '`' . ($orderType ? ' ' . $orderType : '');
+        }
+
+        if ($limitRows)
+        {
+            $q .= ' LIMIT ' .($returnFrom ? $returnFrom . ', ' : ''). $limitRows;
+        }
+
+        if ($result = $this->db->query($q))
+        {
+            $res = array();
+            while($row = $result->fetch_assoc())
+            {
+                $res[] = $row;
+            }
+            return $res;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 }

@@ -2,6 +2,11 @@
 
 //looks like a bicycle
 
+/**
+ *
+ *
+ * @todo add condition field (to use in WHERE section)
+ */
 class StorageBackendFieldSet
 {
     protected $fields;
