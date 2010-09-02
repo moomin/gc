@@ -7,9 +7,14 @@ require_once 'GeoCache.php';
 
 class CacheController extends SiteController
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function defaultAction()
     {
-        $this->list();
+        $this->showList();
     }
     
     public function add()
@@ -85,7 +90,7 @@ class CacheController extends SiteController
         $redirectView->set('message', 'cache has been successufully saved');
         $redirectView->set('seconds', 10);
         $redirectView->set('targetName', 'main page');
-        $redirectView->set('targetUrl', $site->getUrl('cache', 'showList'));
+        $redirectView->set('targetUrl', $site->getUrl('Cache', 'showList'));
         $redirectView->set('txt', $site->text);
 
         $this->addView($redirectView);
@@ -130,9 +135,10 @@ class CacheController extends SiteController
     public function showList()
     {
         $cacheList = new CacheListView;
-        $cacheList->set(Site::getInstance());
-        $caches = array('strn', 445, 4);
-        $caches = Site::getInstance()->storage->getCaches();
+        $cacheList->set($this->site);
+
+        $caches = $this->site->storage->getCaches();
+
         $cacheList->caches = $caches;
         $this->addView($cacheList);
         

@@ -1,13 +1,15 @@
 <?php
 
-require_once 'Controller.php';
+require_once 'SiteController.php';
 require_once 'openid.php';
 require_once 'User.php';
+require_once 'View.php';
 
-class SignInController extends ControllerBase
+class SignInController extends SiteController
 {
     public function __construct()
     {
+        parent::__construct();
     }
 
     public function isValid()
@@ -21,7 +23,7 @@ class SignInController extends ControllerBase
         return true;
     }
 
-    public function index()
+    public function defaultAction()
     {
         if (!$this->isValid())
         {
@@ -37,6 +39,7 @@ class SignInController extends ControllerBase
                 
                 $openid = new LightOpenID;
                 $openid->identity = $this->post['openid_identifier'];
+
                 header('Location: ' . $openid->authUrl());
                 exit(0);
             }
@@ -65,8 +68,22 @@ class SignInController extends ControllerBase
                     session_start();
                     $_SESSION['user'] = $user->name;
                     session_write_close();
-                    header('Location: ' . Site::getInstance()->getUrl('index', '', array(), true));
-                    exit(0);
+
+                    $redirect = new View('RedirectView.tpl');
+                    $redirect->txt = $this->site->text;
+                    $redirect->message = "you have been successufully authorized";
+                    $redirect->targetName = "main page";
+                    $redirect->targetUrl = $this->site->getUrl('site', '', array(), true);
+                    $redirect->seconds = 5;
+
+                    $this->addView($redirect);
+                    $this->displayHead();
+                    $this->displayBody();
+                    $this->displayBottom();
+
+                    return true;
+                    //header('Location: ' . Site::getInstance()->getUrl('site', '', array(), true));
+                    //exit(0);
                 }
                 else
                 {
