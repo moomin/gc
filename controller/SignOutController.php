@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Controller.php';
 require_once 'User.php';
 
 class SignOutController extends ControllerBase
