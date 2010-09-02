@@ -8,6 +8,11 @@ class StorageBackendMysql extends StorageBackend
 
     public function __construct($params)
     {
+        if (!class_exists('MySQLi', false))
+        {
+            throw new Exception('class MySQLi is not defined');
+        }
+
         $db = new MySQLi($params['host'],
                          $params['user'],
                          $params['pass'],
@@ -146,10 +151,12 @@ class StorageBackendMysql extends StorageBackend
         if ($result = $this->db->query($q))
         {
             $res = array();
+ 
             while($row = $result->fetch_assoc())
             {
                 $res[] = $row;
             }
+
             return $res;
         }
         else
