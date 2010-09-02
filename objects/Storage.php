@@ -79,18 +79,30 @@ class Storage
     public function getCaches(StorageBackendFieldSet $conditions = null, $limit = 10, $startFrom = false)
     {
         $data = array('id' => 'int',
-                        'title' => 'string',
-                        'birthTimestamp' => 'int',
-                        'submitTimestamp' => 'int',
-                        'creator' => 'string',
-                        'status' => 'int',
-                        'cacheDescription' => 'string',
-                        'locationDescription' => 'string');
+                      'title' => 'string',
+                      'birthTimestamp' => 'int',
+                      'submitTimestamp' => 'int',
+                      'creator' => 'string',
+                      'status' => 'int',
+                      'cacheDescription' => 'string',
+                      'locationDescription' => 'string');
 
-        $fieldsToReturn = new StorageBackendFieldSet(new GeoCache,
+        $fieldsToReturn = new StorageBackendFieldSet(false,
                                                      $data);
 
-        return $this->backend->find('geocache', $fieldsToReturn, null, 'submitTimestamp', 'DESC', $limit, $startFrom);
+        $cachesArray = $this->backend->find('geocache', $fieldsToReturn, null, 'submitTimestamp', 'DESC', $limit, $startFrom);
+
+        $caches = array();
+
+        foreach ($cachesArray as $cArray)
+        {
+            $c = new GeoCache;
+            $c->id = $cArray['id'];
+            $c->title = $cArray['title'];
+            $caches[$cArray['id']] = $c;
+        }
+
+        return $caches;
     }
 
 }
