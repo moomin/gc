@@ -23,7 +23,8 @@ try
     $site->addHeader('meta', false, array('http-equiv' => 'Content-Type', 'content' => 'text/html; charset=utf-8'));
     $site->addHeader('link', false, array('type' => 'text/css', 'rel' => 'stylesheet', 'href' => 'resources/stylesheet.css'));
 
-    $site->user->signIn('Valera');
+    //uncomment if developing in offline
+    //$site->user->signIn('Valera');
 
     //initialize and run router
     $router = new Router;
