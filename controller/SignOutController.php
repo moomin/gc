@@ -2,7 +2,7 @@
 
 require_once 'User.php';
 
-class SignOutController extends ControllerBase
+class SignOutController extends SiteController
 {
     public function defaultAction()
     {
