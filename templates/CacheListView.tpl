@@ -3,8 +3,8 @@
 No caches yet! :(
 <?php else:
 echo "<ul>\n";
-foreach ($caches as $cache): ?>
-  <li><?= gettype($cache) ?></li>
+foreach ($caches as $c): ?>
+  <li><a href="<?= $Site->getUrl('cache', 'view', array('id' => $c->id)) ?>"><?= $c->title ?></a></li>
 
 <? endforeach;
    echo "</ul>\n";
