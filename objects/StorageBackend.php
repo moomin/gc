@@ -27,6 +27,10 @@ class StorageBackendFieldSet
             {
                 $value = $source[$name];
             }
+            else if ($source == false)
+            {
+                $value = '';
+            }
 
             if (is_bool($value))
             {
