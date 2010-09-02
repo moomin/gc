@@ -22,19 +22,15 @@ class Router
 
     public function run()
     {
-        if ((include_once 'Controller.php') &&
-            (include_once $this->controller.".php") &&
+        if ((include_once $this->controller.".php") &&
             class_exists($this->controller) &&
             ($c = new $this->controller) &&
-            $c instanceof ControllerBase)
+            $c instanceof SiteController)
         {
             Site::getInstance()->getTranslations();
 
-            $c->get = $_GET;
-            $c->post = isset($_POST) ? $_POST : array();
-            $c->args = array_merge($c->get, $c->post);
-
-            if (!$c->doAction($this->method))
+            if (!is_callable(array($c, $this->method)) ||
+                !call_user_func(array($c, $this->method)))
             {
                 include_once 'SiteController.php';
                 $siteController = new SiteController;
