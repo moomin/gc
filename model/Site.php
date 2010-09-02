@@ -36,8 +36,12 @@ class Site
 
     public function init($config)
     {
-        $this->user = new User;
+        $this->title = $config['title'];
+        $this->debug = $config['debug'];
+        $this->setUrlPrefix($config['url_prefix']);
+
         $this->html = new Html;
+        $this->user = new User;
 
         if (isset($_SESSION['user']))
         {
@@ -50,9 +54,6 @@ class Site
 
         $this->storage = new Storage($storageBackend);
 
-        $this->title = $config['title'];
-        $this->debug = $config['debug'];
-        $this->setUrlPrefix($config['url_prefix']);
         return true;
     }
 
