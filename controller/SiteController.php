@@ -88,6 +88,31 @@ class SiteController
         return true;
     }
 
+    public function redirect($url, $name = false, $timeout = false, $message = false)
+    {
+        if (false != $name)
+        {
+            $redirect = new View('RedirectView.tpl');
+            $redirect->txt = $this->site->text;
+            $redirect->message = $message;
+            $redirect->seconds = $timeout;
+            $redirect->targetName = $name;
+            $redirect->targetUrl = $url;
+
+            $this->addView($redirect);
+            $this->displayHead();
+            $this->displayBody();
+            $this->displayBottom();
+        }
+        else
+        {
+            header('Location: ' . $url);
+            exit(0);
+        }
+
+        return true;
+    }
+
     public function updateObject($object, $properties, $from = 'post')
     {
         if (!is_array($from))
