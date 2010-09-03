@@ -29,7 +29,6 @@ try
     //initialize and run router
     $router = new Router;
 
-    $router->init();
     $router->run();
 }
 catch(Exception $e)

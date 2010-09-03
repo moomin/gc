@@ -7,17 +7,12 @@ class Router
 
     public function __construct()
     {
-        $this->controller = ucfirst($this->getRequestParam('module', 'site')) . 'Controller';
-        $this->method = $this->getRequestParam('method', 'defaultAction');
+        $controller = isset($_REQUEST['module']) ? $_REQUEST['module'] : 'site';
+
+        $this->controller = ucfirst($controller) . 'Controller';
+        $this->method = isset($_REQUEST['method']) ? $_REQUEST['method'] : 'defaultAction';;
 
         unset($_GET['module'], $_GET['method']);
-    }
-
-    //init error handler, logger, whatever
-    public function init()
-    {
-
-
     }
 
     public function run()
@@ -43,11 +38,6 @@ class Router
         }
 
         return true;
-    }
-
-    private function getRequestParam($name, $default = null)
-    {
-        return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
     }
 
 }
