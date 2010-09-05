@@ -20,9 +20,6 @@ try
     $site->init($cfg);
     unset($cfg);
 
-    $site->addHeader('meta', false, array('http-equiv' => 'Content-Type', 'content' => 'text/html; charset=utf-8'));
-    $site->addHeader('link', false, array('type' => 'text/css', 'rel' => 'stylesheet', 'href' => 'resources/stylesheet.css'));
-
     //uncomment if developing in offline
     //$site->user->signIn('Valera');
 

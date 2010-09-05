@@ -10,5 +10,7 @@ class CacheView extends View
 
         $this->requiredVars['Site'] = self::MANDATORY_VAR;
         $this->requiredVars['GeoCache'] = self::MANDATORY_VAR;
+        $this->requiredVars['html'] = self::MANDATORY_VAR;
+        $this->requiredVars['edit'] = self::MANDATORY_VAR;
     }
 }

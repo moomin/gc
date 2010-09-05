@@ -11,8 +11,13 @@ class StorageBackendFieldSet
 {
     protected $fields;
 
-    public function __construct($source, $fields)
+    public function __construct($fields = false, $source = false)
     {
+        if (!$fields)
+        {
+            return true;
+        }
+
         $this->fields = array();
 
         foreach ($fields as $name => $type)
@@ -27,7 +32,7 @@ class StorageBackendFieldSet
             {
                 $value = $source[$name];
             }
-            else if ($source == false)
+            else if ($source === false)
             {
                 $value = '';
             }
@@ -60,17 +65,23 @@ class StorageBackendFieldSet
         return true;
     }
 
-    public function setField($name, $type, $value)
+    public function setField($name, $type, $value = false, $condition = false)
     {
         $this->fields[$name] = array('type' => $type,
-                                      'value' => $value);
+                                     'condition' => $condition,
+                                     'value' => $value);
 
         return true;
     }
 
-    public function getField($name)
+    public function getFieldValue($name)
     {
         return isset($this->fields[$name]) ? $this->fields[$name]['value'] : false;
+    }
+
+    public function getFieldCondition($name)
+    {
+        return isset($this->fields[$name]) ? $this->fields[$name]['condition'] : false;
     }
 
     public function getFields()
@@ -86,16 +97,16 @@ abstract class StorageBackend
     abstract public function update($objectName, StorageBackendFieldSet $objectFields, StorageBackendFieldSet $keyFields);
     abstract public function delete($objectName, StorageBackendFieldSet $keyFields);
     abstract public function find($objectName,
-                         StorageBackendFieldSet $searchFields,
-                         StorageBackendFieldSet $objectFields = null,
+                         StorageBackendFieldSet $conditionFields,
+                         StorageBackendFieldSet $getFields = null,
                          $orderBy = false,
                          $orderType = false,
                          $limitRows = false,
                          $returnFrom = false);
 
-    public function get($objectName, StorageBackendFieldSet $searchFields, StorageBackendFieldSet $objectFields = null)
+    public function get($objectName, StorageBackendFieldSet $conditionFields, StorageBackendFieldSet $getFields = null)
     {
-        if ($rows = $this->find($objectName, $searchFields, $objectFields, false, false, 1))
+        if ($rows = $this->find($objectName, $conditionFields, $getFields, false, false, 1))
         {
             return $rows[0];
         }

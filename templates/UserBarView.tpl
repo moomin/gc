@@ -5,13 +5,13 @@
 ?>
 <?= $Site->text->hello.', '.$Site->user->name ?>
 &nbsp;
-<?= $Site->html->getTag('a', $Site->text->addCache, array('href' => $Site->getUrl('Cache', 'add'))) ?>
+<?= $Site->html->getTag('a', $Site->text->addCache, array('href' => $Site->getUrl('cache', 'add'))) ?>
 &nbsp;
-<?= $Site->html->getTag('a', $Site->text->myCaches, array('href' => $Site->getUrl('Cache', 'showList', array('filter'=>'my')))) ?>
+<?= $Site->html->getTag('a', $Site->text->myCaches, array('href' => $Site->getUrl('cache', 'showList', array('filter'=>'my')))) ?>
 &nbsp;
-<?= $Site->html->getTag('a', $Site->text->Preferences, array('href' => $Site->getUrl('User', 'preferences'))) ?>
+<?= $Site->html->getTag('a', $Site->text->Preferences, array('href' => $Site->getUrl('user', 'preferences'))) ?>
 &nbsp;
-<?= $Site->html->getTag('a', $Site->text->signout, array('href' => $Site->getUrl('SignOut'))) ?>
+<?= $Site->html->getTag('a', $Site->text->signout, array('href' => $Site->getUrl('signOut'))) ?>
 <?php
     }
     else

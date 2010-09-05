@@ -2,11 +2,11 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title><?= $Site->title ?></title>
+<title><?= $title ?></title>
 <?php
-foreach ($Site->getHeaders() as $header)
+foreach ($headers as $header)
 {
-   echo $Site->html->getTag($header['tag'], $header['value'], $header['attributes'])."\n";
+   echo $html->getTag($header['tag'], $header['value'], $header['attributes'])."\n";
 }
 ?>
 </head>

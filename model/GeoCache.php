@@ -45,6 +45,29 @@ class GeoCache
         return true;
     }
 
+    public function getCorrdString($type, $format = 'sec')
+    {
+        if ($type == 'lat')
+        {
+            $number = $this->latitude;
+        }
+        else if ($type == 'lon')
+        {
+            $number = $this->longtitude;
+        }
+        else
+        {
+            return false;
+        }
+
+        if ($format == 'sec')
+        {
+            
+        }
+
+        return '';
+    }
+
     public function addComment($user, $voteType, $text)
     {
         $comment = array('user' => '',

@@ -86,8 +86,8 @@ class StorageBackendMysql extends StorageBackend
     }
 
     public function find($objectName,
-                         StorageBackendFieldSet $searchFields,
-                         StorageBackendFieldSet $objectFields = null,
+                         StorageBackendFieldSet $conditionFields = null,
+                         StorageBackendFieldSet $getFields = null,
                          $orderBy = false,
                          $orderType = false,
                          $limitRows = false,
@@ -95,29 +95,38 @@ class StorageBackendMysql extends StorageBackend
     {
         $q = 'SELECT ';
 
-        $selectFields = array();
-
-        $fields = $searchFields->getFields();
-
-        while(list($name, $field) = each($fields))
+        //SELECT ...
+        if ($getFields)
         {
-            $selectFields[] = '`'.$name.'`';
-        }
+            $selectFields = array();
 
-        $q .= implode(',', $selectFields);
+            $fields = $getFields->getFields();
+
+            while(list($name, $field) = each($fields))
+            {
+                $selectFields[] = '`'.$name.'`';
+            }
+
+            $q .= implode(',', $selectFields);
+        }
+        else
+        {
+            $q .= '*';
+        }
 
         $q .= ' FROM `'.$objectName.'`';
 
-        if ($objectFields)
+        //WHERE ...
+        if ($conditionFields)
         {
             $q .= ' WHERE';
 
             if (!get_magic_quotes_gpc())
             {
-                $objectFields->applyCallbackToStrings(array($this->db, 'real_escape_string'));
+                $conditionFields->applyCallbackToStrings(array($this->db, 'real_escape_string'));
             }
 
-            $fields = $objectFields->getFields();
+            $fields = $conditionFields->getFields();
 
             while(list($name, $field) = each($fields))
             {
@@ -132,26 +141,40 @@ class StorageBackendMysql extends StorageBackend
                     $value = "'".$field['value']."'";
                 }
 
-                $whereFields[] = '`'.$name.'` = ' . $value;
+                switch ($field['condition'])
+                {
+                    case '=':
+                    case 'eq':
+                        $conditionString = '=';
+                    break;
+                    default:
+                        $conditionString = '=';
+                }
+
+                $whereFields[] = '`'.$name.'` ' .$conditionString. ' ' . $value;
             }
 
             $q .= implode (' AND ', $whereFields);
         }
 
+        //ORDER BY ...
         if ($orderBy)
         {
             $q .= ' ORDER BY `' . $orderBy . '`' . ($orderType ? ' ' . $orderType : '');
         }
 
+        //LIMIT ...
         if ($limitRows)
         {
             $q .= ' LIMIT ' .($returnFrom ? $returnFrom . ', ' : ''). $limitRows;
         }
 
+        //perform query
         if ($result = $this->db->query($q))
         {
             $res = array();
  
+            //fetch all rows
             while($row = $result->fetch_assoc())
             {
                 $res[] = $row;

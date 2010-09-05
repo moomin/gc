@@ -8,6 +8,8 @@ class HeaderView extends View
     {
         parent::__construct();
 
-        $this->requiredVars['Site'] = self::MANDATORY_VAR;
+        $this->requiredVars['title'] = self::MANDATORY_VAR;
+        $this->requiredVars['html'] = self::MANDATORY_VAR;
+        $this->requiredVars['headers'] = self::MANDATORY_VAR;
     }
 }

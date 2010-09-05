@@ -3,10 +3,9 @@
     $html = $Site->html;
     $txt = $Site->text;
 
-    if ($edit)
-    {
+    if ($edit):
         $edit = true;
-        echo '<form method="post" name="cache" action="'.$Site->getUrl('Cache', 'submit').'">'."\n";
+        echo '<form method="post" name="cache" action="'.$Site->getUrl('cache', 'submit').'">'."\n";
         echo $html->getTag('label', $txt->cacheTitle, array('for' => 'cacheTitle')).': ';
         echo $html->getTag('input', '', array('type' => 'text', 'name' => 'title', 'id' => 'cacheTitle'))."<br>\n";
         echo $html->getTag('label', $txt->latitude, array('for' => 'cacheLatitude')).': ';
@@ -33,11 +32,30 @@
 
         echo $html->getTag('input', $txt->submitCache, array('type' => 'submit'))."\n";
         echo '</form>'."\n";
-    }
-    else
-    {
+    else:
+?>
+        <h6><?= $GeoCache->title ?></h6>
+    <table>
+      <tr>
+          <td>Coordinates:</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>Set Date:</td>
+          <td><?= $GeoCache->birthTimestamp ?></td>
+      </tr>
+      <tr>
+          <td>Description:</td>
+          <td><?= $GeoCache->cacheDescription ?></td>
+      </tr>
+      <tr>
+          <td>Location:</td>
+          <td><?= $GeoCache->locationDescription ?></td>
+      </tr>
+    </table>
         
-    }
+<?php
+    endif;    
 ?>
 
 </div>

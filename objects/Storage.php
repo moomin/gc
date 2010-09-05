@@ -43,7 +43,7 @@ class Storage
                         'locationDescription' => 'string');
 
         //        $fields = array_merge($data, $this->getObjectFields($cache, $data));
-        $fields = new StorageBackendFieldSet($cache, $data);
+        $fields = new StorageBackendFieldSet($data, $cache);
 
         $fields->setField('point', 'WKT', 'POINT('.$cache->latitude.' '.$cache->longtitude.')');
 
@@ -53,7 +53,7 @@ class Storage
         }
         else
         {
-            $keyFields = new StorageBackendFieldSet($cache, array('id' => 'int'));
+            $keyFields = new StorageBackendFieldSet(array('id' => 'int'), $cache);
             $result = $this->backend->update('geocache', $data, $keyFields);
         }
 
@@ -67,10 +67,12 @@ class Storage
 
     public function getCache($id)
     {
-        if ($data = $this->backend->get('geocache', array('id' => $id)))
+        $condition = new StorageBackendFieldSet;
+        $condition->setField('id', 'int', (int)$id, 'eq');
+
+        if ($data = $this->backend->get('geocache', $condition))
         {
-            $cache = new GeoCache;
-            return $cache;
+            return $this->fillObject(new GeoCache, $data);
         }
         
         return false;
@@ -87,10 +89,9 @@ class Storage
                       'cacheDescription' => 'string',
                       'locationDescription' => 'string');
 
-        $fieldsToReturn = new StorageBackendFieldSet(false,
-                                                     $data);
+        $getFields = new StorageBackendFieldSet($data);
 
-        $cachesArray = $this->backend->find('geocache', $fieldsToReturn, null, 'submitTimestamp', 'DESC', $limit, $startFrom);
+        $cachesArray = $this->backend->find('geocache', $conditions, $getFields, 'submitTimestamp', 'DESC', $limit, $startFrom);
 
         $caches = array();
 
@@ -103,6 +104,16 @@ class Storage
         }
 
         return $caches;
+    }
+
+    public function fillObject($object, $data)
+    {
+        foreach ($data as $name => $value)
+        {
+            $object->$name = $value;
+        }
+
+        return $object;
     }
 
 }

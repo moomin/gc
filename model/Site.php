@@ -12,7 +12,6 @@ class Site
     const URL_MODE_SIMPLE = 1;
     const URL_MODE_REWRITE = 2;
 
-    private $headers = array();
     private $urlMode = self::URL_MODE_SIMPLE;
     private $urlPrefix = '/';
     public $title;
@@ -83,19 +82,6 @@ class Site
         }
 
         return self::$instance;
-    }
-
-    public function addHeader($tag, $value = false, $attributes = array())
-    {
-        $this->headers[] = array('tag' => $tag,
-                                 'value' => $value,
-                                 'attributes' => $attributes);
-        return true;
-    }
-
-    public function getHeaders()
-    {
-        return $this->headers;
     }
 
     public function getTranslations($module = false, $method = false)

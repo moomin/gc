@@ -11,6 +11,7 @@ class SiteController
     protected $args;
 
     protected $site;
+    protected $headers = array();
     protected $views = array();
 
     public function __construct()
@@ -20,6 +21,21 @@ class SiteController
         $this->args = array_merge($this->get, $this->post);
 
         $this->site = Site::getInstance();
+
+        //not sure about adding header information from controller. It should be either view's property
+        //or application's preference
+
+        //let browser know about content-type and charset
+        $this->addHeader('meta',
+                         false,
+                         array('http-equiv' => 'Content-Type', 'content' => 'text/html; charset=utf-8'));
+
+        //default stylesheet
+        $this->addHeader('link',
+                         false,
+                         array('type' => 'text/css', 'rel' => 'stylesheet', 'href' => 'resources/stylesheet.css'));
+
+
     }
 
     public function addView($view)
@@ -49,7 +65,9 @@ class SiteController
     public function displayHead()
     {
         $header = new HeaderView();
-        $header->set($this->site);
+        $header->set('title', $this->site->title);
+        $header->set('headers', $this->headers);
+        $header->set('html', $this->site->html);
         $header->display();
 
         return true;
@@ -57,13 +75,11 @@ class SiteController
 
     public function displayTop()
     {
-        $header = new HeaderView();
-        $header->set($this->site);
+        $this->displayHead();
 
         $userBar = new UserBarView();
         $userBar->set($this->site);
 
-        $header->display();
         $userBar->display();
 
         return true;
@@ -110,6 +126,14 @@ class SiteController
             exit(0);
         }
 
+        return true;
+    }
+
+    public function addHeader($tag, $value = false, $attributes = array())
+    {
+        $this->headers[] = array('tag' => $tag,
+                                 'value' => $value,
+                                 'attributes' => $attributes);
         return true;
     }
 

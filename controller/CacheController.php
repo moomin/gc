@@ -90,7 +90,7 @@ class CacheController extends SiteController
         $redirectView->set('message', 'cache has been successufully saved');
         $redirectView->set('seconds', 10);
         $redirectView->set('targetName', 'main page');
-        $redirectView->set('targetUrl', $site->getUrl('Cache', 'showList'));
+        $redirectView->set('targetUrl', $site->getUrl('cache', 'showList'));
         $redirectView->set('txt', $site->text);
 
         $this->addView($redirectView);
@@ -121,11 +121,15 @@ class CacheController extends SiteController
         return $decimalMinutes;
     }
 
-    public function show()
+    public function view()
     {
+        $id = $this->get['id'];
+
         $cacheView = new CacheView;
-        $cacheView->set(Site::getInstance());
-        $cacheView->set(new GeoCache());
+        $cacheView->set($this->site);
+        $cacheView->set('edit', false);
+        $cacheView->set('html', $this->site->html);
+        $cacheView->set($this->site->storage->getCache($id));
 
         $this->addView($cacheView);
 
