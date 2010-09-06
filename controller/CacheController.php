@@ -20,7 +20,9 @@ class CacheController extends SiteController
     public function add()
     {
         $cacheView = new CacheView;
-        $cacheView->set(Site::getInstance());
+        $cacheView->set($this->site);
+        $cacheView->set('html', $this->site->html);
+        $cacheView->set('txt', $this->site->text);
         $cacheView->set(new GeoCache);
         $cacheView->edit = true;
 

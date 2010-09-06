@@ -45,7 +45,7 @@ class GeoCache
         return true;
     }
 
-    public function getCorrdString($type, $format = 'sec')
+    public function getCoordString($type, $format = 'sec')
     {
         if ($type == 'lat')
         {
@@ -60,12 +60,16 @@ class GeoCache
             return false;
         }
 
+        $str = '';
+
         if ($format == 'sec')
         {
-            
+            $str = abs((int)floor($number));
+            $decimal = ($number - $str);
+            $str .= 'deg '.(60 * $decimal);
         }
 
-        return '';
+        return $str;
     }
 
     public function addComment($user, $voteType, $text)

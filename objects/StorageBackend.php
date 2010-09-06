@@ -97,14 +97,16 @@ abstract class StorageBackend
     abstract public function update($objectName, StorageBackendFieldSet $objectFields, StorageBackendFieldSet $keyFields);
     abstract public function delete($objectName, StorageBackendFieldSet $keyFields);
     abstract public function find($objectName,
-                         StorageBackendFieldSet $conditionFields,
-                         StorageBackendFieldSet $getFields = null,
-                         $orderBy = false,
-                         $orderType = false,
-                         $limitRows = false,
-                         $returnFrom = false);
+                                  StorageBackendFieldSet $conditionFields = null,
+                                  StorageBackendFieldSet $getFields = null,
+                                  $orderBy = false,
+                                  $orderType = false,
+                                  $limitRows = false,
+                                  $returnFrom = false);
 
-    public function get($objectName, StorageBackendFieldSet $conditionFields, StorageBackendFieldSet $getFields = null)
+    public function get($objectName,
+                        StorageBackendFieldSet $conditionFields,
+                        StorageBackendFieldSet $getFields = null)
     {
         if ($rows = $this->find($objectName, $conditionFields, $getFields, false, false, 1))
         {

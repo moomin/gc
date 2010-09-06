@@ -38,7 +38,7 @@
     <table>
       <tr>
           <td>Coordinates:</td>
-          <td></td>
+          <td><?= $GeoCache->getCoordString('lat') ?></td>
       </tr>
       <tr>
           <td>Set Date:</td>
