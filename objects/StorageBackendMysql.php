@@ -13,19 +13,32 @@ class StorageBackendMysql extends StorageBackend
             throw new Exception('class MySQLi is not defined');
         }
 
+
+        //there is no information about how MySQLi_Driver class can be used (09 Sept 2010)
+        //so, instead of using it's report_mode property, I'll use procedural mysqli_report
+        //equivalent
+        //$drv = new MySQLi_Driver;
+        //$drv->report_mode = MYSQLI_REPORT_STRICT;
+
+        //it is is per-process before PHP 5.2.15 & 5.3.4 and per-request after
+        mysqli_report(MYSQLI_REPORT_STRICT);
+
         $db = new MySQLi($params['host'],
                          $params['user'],
                          $params['pass'],
                          $params['db']);
 
-        if ($db)
+        if (!$db->connect_error)
         {
             $db->real_query("SET NAMES 'utf8'");
 
             $this->db = $db;
             return true;
         }
-
+        else
+        {
+            throw new Exception('Error initializing MySQL connection. Connect error: ' . $db->connect_error);
+        }
     }
  
     public function getError()
