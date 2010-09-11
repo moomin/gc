@@ -84,6 +84,11 @@ class StorageBackendFieldSet
         return isset($this->fields[$name]) ? $this->fields[$name]['condition'] : false;
     }
 
+    public function getField($name)
+    {
+        return isset($this->fields[$name]) ? $this->fields[$name]['value'] : false;
+    }
+
     public function getFields()
     {
         return $this->fields;

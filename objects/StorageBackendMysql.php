@@ -75,6 +75,10 @@ class StorageBackendMysql extends StorageBackend
             {
                 $value = "GeomFromText('".$field['value']."')";
             }
+            else if ($field['type'] == 'function')
+            {
+                $value = $field['value'];
+            }
             else
             {
                 continue;
@@ -117,7 +121,14 @@ class StorageBackendMysql extends StorageBackend
 
             while(list($name, $field) = each($fields))
             {
-                $selectFields[] = '`'.$name.'`';
+                if ($field['type'] == 'function')
+                {
+                    $selectFields[] = $field['value'] . ' AS `'.$name.'`';
+                }
+                else
+                {
+                    $selectFields[] = '`'.$name.'`';
+                }
             }
 
             $q .= implode(',', $selectFields);
@@ -152,6 +163,10 @@ class StorageBackendMysql extends StorageBackend
                 else if ($field['type'] == 'string')
                 {
                     $value = "'".$field['value']."'";
+                }
+                if ($field['type'] == 'function')
+                {
+                    $value[] = $field['value'];
                 }
 
                 switch ($field['condition'])
