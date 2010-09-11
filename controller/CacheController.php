@@ -3,10 +3,13 @@
 require_once 'SiteController.php';
 require_once 'CacheView.php';
 require_once 'CacheListView.php';
+require_once 'FormErrorsView.php';
 require_once 'GeoCache.php';
 
 class CacheController extends SiteController
 {
+    protected $submitErrors = array();
+
     public function __construct()
     {
         parent::__construct();
@@ -17,14 +20,21 @@ class CacheController extends SiteController
         $this->showList();
     }
     
-    public function add()
+    public function add(GeoCache $cache = null)
     {
         $cacheView = new CacheView;
+        $cacheView->edit = true;
         $cacheView->set($this->site);
         $cacheView->set('html', $this->site->html);
         $cacheView->set('txt', $this->site->text);
         $cacheView->set(new GeoCache);
-        $cacheView->edit = true;
+
+        if ($this->submitErrors)
+        {
+            $errorsView = new FormErrorsView;
+            $errorsView->set('errors', $this->submitErrors);
+            $cacheView->set('errors', $errorsView);
+        }
 
         $this->addView($cacheView);
 
@@ -46,7 +56,8 @@ class CacheController extends SiteController
 
         if (!$decimalMinutes = $this->getDecimalMinutes($this->post['latitudeMinutes']))
         {
-            return false;
+            $this->submitErrors[] = 'invalid latitude';
+            return $this->add();
         }
 
         $decimalDegree = (float)$this->post['latitudeDegree'] + $decimalMinutes;
@@ -54,7 +65,8 @@ class CacheController extends SiteController
 
         if (!$decimalMinutes = $this->getDecimalMinutes($this->post['longtitudeMinutes']))
         {
-            return false;
+            $this->submitErrors[] = 'invalid longtitude';
+            return $this->add();
         }
 
         $decimalDegree = (float)$this->post['longtitudeDegree'] + $decimalMinutes;
@@ -77,7 +89,8 @@ class CacheController extends SiteController
             )
            )
         {
-            return false;
+            $this->submitErrors[] = 'cache cannot be updated';
+            return $this->add();
         }
         else if ($existingCache)
         {
@@ -103,7 +116,7 @@ class CacheController extends SiteController
 
     protected function getDecimalMinutes($string)
     {
-        $minutesRegexp = "/^(\d{2})(\.|\')(\d{2,4})$/";
+        $minutesRegexp = "/^(\d{2})(\.|\')(?:(\d{2})''|(\d{4}))$/";
 
         if (!preg_match($minutesRegexp, $string, $minutes))
         {
@@ -118,6 +131,7 @@ class CacheController extends SiteController
         else if ($minutes[2] == "'")
         {
             $decimalMinutes = (float)($minutes[1] + (float)($minutes[3] / 60));
+            $decimalMinutes = $decimalMinutes / 60;
         }
 
         return $decimalMinutes;

@@ -4,7 +4,8 @@
     $txt = $Site->text;
 
     if ($edit):
-        $edit = true;
+
+        echo isset($errors) ? $errors : '';
         echo '<form method="post" name="cache" action="'.$Site->getUrl('cache', 'submit').'">'."\n";
         echo $html->getTag('label', $txt->cacheTitle, array('for' => 'cacheTitle')).': ';
         echo $html->getTag('input', '', array('type' => 'text', 'name' => 'title', 'id' => 'cacheTitle'))."<br>\n";
@@ -34,11 +35,11 @@
         echo '</form>'."\n";
     else:
 ?>
-        <h6><?= $GeoCache->title ?></h6>
+    <h6><?= $GeoCache->title ?></h6>
     <table>
       <tr>
           <td>Coordinates:</td>
-          <td><?= $GeoCache->getCoordString('lat') ?></td>
+          <td><?= $GeoCache->getCoordString('lat', 'min').' '.$GeoCache->getCoordString('lon', 'min') ?></td>
       </tr>
       <tr>
           <td>Set Date:</td>
