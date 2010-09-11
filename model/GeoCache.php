@@ -49,24 +49,41 @@ class GeoCache
     {
         if ($type == 'lat')
         {
-            $number = $this->latitude;
+            $number = abs($this->latitude);
+            $compass = $this->latitude ? 'N' : 'S';
         }
         else if ($type == 'lon')
         {
-            $number = $this->longtitude;
+            $number = abs($this->longtitude);
+            $compass = $this->longtitude ? 'E' : 'W';
         }
         else
         {
             return false;
         }
 
-        $str = '';
+        $degreeStr = "\xC2\xB0";
+
+        $degree = (int)floor($number);
+        $minutes = fmod($number, 1)*60;
+        $seconds = fmod($minutes, 1)*60;
 
         if ($format == 'sec')
         {
-            $str = abs((int)floor($number));
-            $decimal = ($number - $str);
-            $str .= 'deg '.(60 * $decimal);
+            $str = $compass
+                .$degree . $degreeStr
+                .(int)floor($minutes) . "'"
+                .(int)round($seconds) . "''";
+        }
+        else if ($format == 'min')
+        {
+            $str = $compass
+                .$degree . $degreeStr
+                .round($minutes, 4) . "'";
+        }
+        else
+        {
+            $str = $number;
         }
 
         return $str;
