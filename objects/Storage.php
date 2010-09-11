@@ -69,8 +69,20 @@ class Storage
     {
         $condition = new StorageBackendFieldSet;
         $condition->setField('id', 'int', (int)$id, 'eq');
+        
+        $fields = new StorageBackendFieldSet(array('id' => 'int',
+                                                   'title' => 'string',
+                                                   'birthTimestamp' => 'int',
+                                                   'submitTimestamp' => 'int',
+                                                   'creator' => 'string',
+                                                   'status' => 'int',
+                                                   'cacheDescription' => 'string',
+                                                   'locationDescription' => 'string'));
 
-        if ($data = $this->backend->get('geocache', $condition))
+        $fields->setField('latitude', 'function', 'X(point)');
+        $fields->setField('longtitude', 'function', 'Y(point)');
+
+        if ($data = $this->backend->get('geocache', $condition, $fields))
         {
             return $this->fillObject(new GeoCache, $data);
         }
