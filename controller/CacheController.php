@@ -57,7 +57,6 @@ class CacheController extends SiteController
         if (!$decimalMinutes = $this->getDecimalMinutes($this->post['latitudeMinutes']))
         {
             $this->submitErrors[] = 'invalid latitude';
-            return $this->add();
         }
 
         $decimalDegree = (float)$this->post['latitudeDegree'] + $decimalMinutes;
@@ -66,7 +65,6 @@ class CacheController extends SiteController
         if (!$decimalMinutes = $this->getDecimalMinutes($this->post['longtitudeMinutes']))
         {
             $this->submitErrors[] = 'invalid longtitude';
-            return $this->add();
         }
 
         $decimalDegree = (float)$this->post['longtitudeDegree'] + $decimalMinutes;
@@ -90,12 +88,16 @@ class CacheController extends SiteController
            )
         {
             $this->submitErrors[] = 'cache cannot be updated';
-            return $this->add();
         }
         else if ($existingCache)
         {
             //force title from existing cache
             $cache->title = $existingCache->title;
+        }
+
+        if ($this->submitErrors)
+        {
+            return $this->add();
         }
 
         $site->storage->saveCache($cache);
