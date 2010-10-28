@@ -13,9 +13,12 @@ class SignOutController extends SiteController
     public function defaultAction()
     {
         unset($_SESSION);
-        setcookie(session_name(), '');
-        session_destroy();
-        session_write_close();
+        if (session_id())
+        {
+            setcookie(session_name(), '');
+            session_destroy();
+            session_write_close();
+        }
 
         return $this->redirect($this->site->getUrl('site'),
                                'homepage',
